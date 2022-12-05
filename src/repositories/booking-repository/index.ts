@@ -1,5 +1,4 @@
 import { prisma } from "@/config";
-import { number } from "joi";
 
 async function findFirst(id: number) {
   return prisma.booking.findFirst({
