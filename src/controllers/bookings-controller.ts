@@ -14,7 +14,6 @@ export async function getBooking(req: AuthenticatedRequest, res: Response) {
     if (error.name === "NotFoundError") {
       return res.sendStatus(httpStatus.NOT_FOUND);
     }
-    return res.sendStatus(httpStatus.BAD_REQUEST);
   }
 }
 
@@ -36,7 +35,6 @@ export async function postBooking(req: AuthenticatedRequest, res: Response) {
     if (error.name === "maximumCapacityRoom") {
       return res.sendStatus(httpStatus.FORBIDDEN);
     }
-    return res.sendStatus(httpStatus.FORBIDDEN);
   }
 }
 
@@ -59,6 +57,5 @@ export async function updateBooking(req: AuthenticatedRequest, res: Response) {
     if (error.name === "maximumCapacityRoom") {
       return res.sendStatus(httpStatus.FORBIDDEN);
     }
-    return res.sendStatus(httpStatus.FORBIDDEN);
   }
 }
