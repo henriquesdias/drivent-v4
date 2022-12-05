@@ -1,4 +1,5 @@
 import { prisma } from "@/config";
+import { number } from "joi";
 
 async function findFirst(id: number) {
   return prisma.booking.findFirst({
@@ -35,11 +36,22 @@ async function create(userId: number, roomId: number) {
     },
   });
 }
+async function update(bookingId: number, roomId: number) {
+  return prisma.booking.update({
+    where: {
+      id: bookingId,
+    },
+    data: {
+      roomId,
+    },
+  });
+}
 
 const bookingRepository = {
   findFirst,
   create,
   findMany,
+  update,
 };
 
 export default bookingRepository;

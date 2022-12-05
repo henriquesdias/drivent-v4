@@ -37,9 +37,35 @@ async function postNewBooking(userId: number, roomId: number) {
   return bookingRepository.create(userId, roomId);
 }
 
+async function updateBooking(bookingId: number, roomId: number, userId: number) {
+  const room = await roomRepository.findFirst(roomId);
+  const booking = await bookingRepository.findFirst(userId);
+
+  if (!room || !booking) {
+    throw notFoundError();
+  }
+
+  const enrollment = await enrollmentRepository.findWithAddressByUserId(userId);
+
+  if (!enrollment) throw unauthorizedError();
+
+  const ticket = await ticketRepository.findTicketByEnrollmentId(enrollment.id);
+
+  if (!ticket || ticket.status === "RESERVED" || ticket.TicketType.isRemote || !ticket.TicketType.includesHotel) {
+    throw cannotListHotelsError();
+  }
+  const allBookings = await bookingRepository.findMany(roomId);
+  if (allBookings.length === room.capacity) {
+    throw maximumCapacityRoom();
+  }
+
+  return bookingRepository.update(bookingId, roomId);
+}
+
 const bookingsService = {
   getBookingById,
   postNewBooking,
+  updateBooking,
 };
 
 export default bookingsService;
