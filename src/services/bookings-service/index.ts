@@ -40,14 +40,14 @@ async function postNewBooking(userId: number, roomId: number) {
 async function updateBooking(bookingId: number, roomId: number, userId: number) {
   const room = await roomRepository.findFirst(roomId);
   const booking = await bookingRepository.findFirst(userId);
+  const bookingReceveid = await bookingRepository.findUnique(bookingId);
 
-  if (!room || !booking) {
+  if (!room || !booking || !bookingReceveid) {
     throw notFoundError();
   }
 
   const enrollment = await enrollmentRepository.findWithAddressByUserId(userId);
 
-  const bookingReceveid = await bookingRepository.findUnique(bookingId);
   if (!enrollment || bookingReceveid.userId !== userId) throw unauthorizedError();
 
   const ticket = await ticketRepository.findTicketByEnrollmentId(enrollment.id);
