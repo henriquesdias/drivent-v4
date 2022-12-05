@@ -47,7 +47,8 @@ async function updateBooking(bookingId: number, roomId: number, userId: number) 
 
   const enrollment = await enrollmentRepository.findWithAddressByUserId(userId);
 
-  if (!enrollment) throw unauthorizedError();
+  const bookingReceveid = await bookingRepository.findUnique(bookingId);
+  if (!enrollment || bookingReceveid.userId !== userId) throw unauthorizedError();
 
   const ticket = await ticketRepository.findTicketByEnrollmentId(enrollment.id);
 
