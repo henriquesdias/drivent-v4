@@ -20,9 +20,26 @@ async function findFirst(id: number) {
     },
   });
 }
+async function findMany(roomId: number) {
+  return prisma.booking.findMany({
+    where: {
+      roomId,
+    },
+  });
+}
+async function create(userId: number, roomId: number) {
+  return prisma.booking.create({
+    data: {
+      userId,
+      roomId,
+    },
+  });
+}
 
 const bookingRepository = {
   findFirst,
+  create,
+  findMany,
 };
 
 export default bookingRepository;

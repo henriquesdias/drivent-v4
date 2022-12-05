@@ -16,3 +16,24 @@ export async function getBooking(req: AuthenticatedRequest, res: Response) {
     return res.sendStatus(httpStatus.BAD_REQUEST);
   }
 }
+
+export async function postBooking(req: AuthenticatedRequest, res: Response) {
+  const { userId } = req;
+  const { roomId } = req.body;
+  try {
+    const { id } = await bookingsService.postNewBooking(userId, roomId);
+
+    return res.status(httpStatus.OK).send({ bookingId: id });
+  } catch (error) {
+    if (error.name === "NotFoundError") {
+      return res.sendStatus(httpStatus.NOT_FOUND);
+    }
+    if (error.name === "CannotListHotelsError") {
+      return res.sendStatus(httpStatus.UNAUTHORIZED);
+    }
+    if (error.name === "maximumCapacityRoom") {
+      return res.sendStatus(httpStatus.FORBIDDEN);
+    }
+    return res.sendStatus(httpStatus.FORBIDDEN);
+  }
+}
